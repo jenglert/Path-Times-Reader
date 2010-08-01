@@ -1,0 +1,4 @@
+PATH Times Reader
+=================
+
+The PATH times reader is a Ruby application that parses the PATH train schedules from the internet and allows developers (and computers) to interact with them.
