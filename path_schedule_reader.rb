@@ -4,7 +4,8 @@ require 'path_schedule'
 
 require 'active_support' 
 
-PATH_TRAIN_FILES = ["NWK_WTC_Weekday.html",
+PATH_TRAIN_FILES = [
+"NWK_WTC_Weekday.html",
 "NWK_WTC_Sat.html",
 "NWK_WTC_Sun_Hol.html",
 "WTC_NWK_Weekday.html",
@@ -12,17 +13,12 @@ PATH_TRAIN_FILES = ["NWK_WTC_Weekday.html",
 "WTC_NWK_Sun_Hol.html",
 "HOB_WTC_Weekday.html",
 "WTC_HOB_Weekday.html",
-"JSQ_33rd_Weekday.html",
-"33rd_JSQ_Weekday.html",
 "HOB_33rd_Weekday.html",
-"JSQ_33rd_via_HOB_Sat.html",
-"JSQ_33rd_via_HOB_Sun_Hol.html",
-"33rd_HOB_Weekday.html",
-"33rd_JSQ_via_HOB_Sat.html",
-"33rd_JSQ_via_HOB_Sun_Hol.html",
 "JSQ_33rd_Weekday.html",
 "JSQ_33rd_via_HOB_Sat.html",
 "JSQ_33rd_via_HOB_Sun_Hol.html",
+"33rd_JSQ_Weekday.html",
+"33rd_HOB_Weekday.html",
 "33rd_JSQ_Weekday.html",
 "33rd_JSQ_via_HOB_Sat.html",
 "33rd_JSQ_via_HOB_Sun_Hol.html"]
@@ -34,8 +30,6 @@ class PathScheduleReader
     schedules = []
 
     for pathTrainFile in PATH_TRAIN_FILES do
-      puts "Processing :" + pathTrainFile
-  
       schedule = PathSchedule.new();
       schedule.name = pathTrainFile.sub(".html", "")
   
@@ -101,7 +95,19 @@ class PathScheduleReader
           end
           
           # Add the list of times to the overall list
-          all_times << times if (times.count() > 0)
+          if times.count() > 0 then
+            all_times << times
+            
+            if !schedule.travel_times then
+              schedule.travel_times = []
+              
+              
+              0.upto(times.count() - 2).each{ |i|
+                schedule.travel_times << (Time.parse(times[i+1]) - Time.parse(times[i])) / 60
+              }
+            end
+             
+          end
         end
         schedule.times = all_times
       end
